@@ -11,26 +11,20 @@ public class Person {
     // Collection of person's coins
     private List<Coin> wallet;
 
-    // Secret personal information
+    // Secret personal number
     private BigInteger u;
 
-    // Personal account number based on central authority
+    // Personal identification number supplied by central authority
     public BigInteger I;
 
-    // Personal information received from bank when bank account created
+    // Personal account number supplied by bank
     public BigInteger zP;
 
-    public Person(BigInteger u) {
+    public Person(BigInteger u, State state, Bank bank) {
         wallet = new ArrayList<>();
         this.u = u;
-    }
-
-    public void initializeI(State state) {
-        this.I = state.g1.modPow(u, state.p);
-    }
-
-    public void zPInitialize(Bank bank, State state) {
-        zP = bank.zPcompute(this, state);
+        I = state.g1.modPow(u, state.p);
+        zP = bank.createAccountNumber(I, state);
     }
 
     public Random5Tuple createTuple() {
@@ -44,15 +38,15 @@ public class Person {
     }
 
     public Coin createPartialCoin(State state, Random5Tuple tup, BigInteger gw, BigInteger beta) {
-        BigInteger A = this.I.multiply(state.g2).modPow(tup.s,state.p);
+        BigInteger A = I.multiply(state.g2).modPow(tup.s,state.p);
         BigInteger B = state.g1.modPow(tup.x1,state.p).multiply((state.g2.modPow(tup.x2,state.p))).mod(state.p);
-        BigInteger z = this.zP.modPow(tup.s,state.p);
+        BigInteger z = zP.modPow(tup.s,state.p);
         BigInteger a = gw.modPow(tup.a1, state.p).multiply((state.g.modPow(tup.a2,state.p))).mod(state.p);
         BigInteger b = beta.modPow((tup.s.multiply(tup.a1)),state.p).multiply((A.modPow(tup.a2,state.p))).mod(state.p);
         return new Coin(A,B,z,a,b);
     }
 
-    public BigInteger cCalculate(Random5Tuple tup, State state, Coin coin) {
+    public BigInteger cCompute(Random5Tuple tup, State state, Coin coin) {
         return tup.a1.modInverse(state.q).multiply(state.H(coin)).mod(state.q);
     }
 

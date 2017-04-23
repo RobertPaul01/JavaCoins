@@ -1,6 +1,4 @@
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Created by Robby on 4/22/17.
@@ -23,10 +21,8 @@ public class CoinSimulation {
                 new BigInteger("389437573656"),
                 new BigInteger("246828991479"));
 
-        // Initialize personal information for Bob
-        Person bob = new Person(new BigInteger("957672238971"));
-        bob.initializeI(state);
-        bob.zPInitialize(bank,state);
+        // Initialize personal and private information for Bob
+        Person bob = new Person(new BigInteger("957672238971"), state, bank);
 
         // Create some coins for bob
         createCoinsForPerson(100,state,bank,bob);
@@ -41,10 +37,10 @@ public class CoinSimulation {
             Random5Tuple tup = person.createTuple();
 
             // Person computes partial coin information with gw and beta supplied from bank
-            Coin coin = person.createPartialCoin(state, tup, bank.gw, bank.beta);
+            Coin coin = person.createPartialCoin(state,tup,bank.gw,bank.beta);
 
             // Person computes c and sends to bank
-            BigInteger c = person.cCalculate(tup,state,coin);
+            BigInteger c = person.cCompute(tup,state,coin);
 
             // Bank computes c1 with c provided from person
             BigInteger c1 = bank.c1Compute(c,state);

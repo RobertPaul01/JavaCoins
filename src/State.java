@@ -32,7 +32,7 @@ public class State {
     }
 
     // A^r = b*z^H(A,B,z,a,b)
-    public boolean zCheckValid(Coin coin) {
+    public boolean aCheckValid(Coin coin) {
         return (coin.A.modPow(coin.r,p)).equals(coin.b.multiply((coin.z.modPow(H(coin),p))).mod(p));
     }
 

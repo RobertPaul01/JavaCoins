@@ -23,8 +23,8 @@ public class Bank {
         this.x = x;
     }
 
-    public BigInteger zPcompute(Person person, State state) {
-        return person.I.multiply(state.g2).modPow(x, state.p);
+    public BigInteger createAccountNumber(BigInteger I, State state) {
+        return I.multiply(state.g2).modPow(x, state.p);
     }
 
     // Coin creation public keys for Person
